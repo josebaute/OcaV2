@@ -19,6 +19,8 @@ typedef int tJugadores[NUM_JUGADORES];
 
 
 
+
+
 bool MODO_DEBUG;
 
 int jugador;
@@ -67,7 +69,7 @@ int main() {
     int tr;
     cout << "\t**** LA OCA ****" << endl;
     cout << "SELECCIONE MODO DE JUEGO:" << endl;
-    cout << "MODO NORMAL(0) ------- MODO DEBUG(1)" << endl;
+    cout << "MODO normal(0) ------- MODO DEBUG(1)" << endl;
     cin >> MODO_DEBUG;
 
 
@@ -225,24 +227,35 @@ int main() {
 
 
 void iniciaTablero(tTablero tablero) {
+    for (int i = 0; i < NUM_CASILLAS -1; i++) {
+        tablero[i] = NORMAL;
+    }
+    tablero[NUM_CASILLAS - 1] = OCA;
+    
+}
+
+
+bool cargaTablero(tTablero tablero) {
     ifstream archivo;
     int normal;
     string nombres_normal;
+
     archivo.open("tablero.txt");
     if (archivo.is_open()) {
         archivo >> normal >> nombres_normal;
         while (normal != 0) {
+
             cout << normal << " " << nombres_normal << endl;
+            normal = NORMAL;
             archivo >> normal >> nombres_normal;
         }
         archivo.close();
-        
+
     }
     else {
         cout << "No se ha podido abrir el archivo" << endl;
     }
 }
-
 
 
 
