@@ -24,7 +24,6 @@ typedef int tJugadores[NUM_JUGADORES];
 bool MODO_DEBUG;
 
 int jugador;
-int dado;
 int turnos;
 
 char siguiente;
@@ -63,31 +62,32 @@ int main() {
     /*srand(time(NULL));
     int casilla;
     int casillaActual = 1;
-    int tiradas = 1;
-    int casillaJ1 = 1;
-    int casillaJ2 = 1;
-    int posicion;
+    tJugadores posiciones;
+    int dado;
     int tr;
     cout << "\t**** LA OCA ****" << endl;
     cout << "SELECCIONE MODO DE JUEGO:" << endl;
-    cout << "MODO normal(0) ------- MODO DEBUG(1)" << endl;
+    cout << "MODO NORMAL(0) ------- MODO DEBUG(1)" << endl;
     cin >> MODO_DEBUG;
-    cout << quienEmpieza() << endl;
-    while (casillaJ1 < Meta_casilla && casillaJ2 < Meta_casilla) {
+    turnoJ = quienEmpieza();
+    while (posiciones[0] < NUM_CASILLAS && posiciones[2] < NUM_CASILLAS && posiciones[4] < NUM_CASILLAS && posiciones[6] < NUM_CASILLAS)¿? {
         //JUGADOR 1
         if (jugador == 1) {
-            casillaActual = casillaJ1;
-            cout << "CASILLA ACTUAL: " << casillaJ1 << endl;
+            posiciones[¿?] = casillaActual;
+            cout << "CASILLA ACTUAL: " << posiciones[¿?] << endl;
             if (MODO_DEBUG == true) {
                 cout << "VALOR DEL DADO: ";
-                tirardadoManual();
+                dado = tirardadoManual();
+                cout << endl;
             }
             else {
-                cout << "VALOR DEL DADO: " << tirarDado() << endl;
+                cout << "VALOR DEL DADO: ";
+                dado = tirarDado();
+                cout << endl;
             }
-            casillaJ1 = casillaJ1 + dado;
-            cout << "PASAS A LA CASILLA: " << casillaJ1 << endl;
-            posicion = efectoPosicion(casillaJ1);
+            posiciones[¿?] = posiciones[¿?] + dado;
+            cout << "PASAS A LA CASILLA: " << posiciones[¿?] << endl;
+            posiciones[¿?] = efectoPosicion(posiciones[¿?]);
             casillaJ1 = posicion;
             cout << posicion << endl;
             tr = efectoTiradas(casillaJ1, tiradas);
@@ -488,17 +488,19 @@ int siguienteMuerte() {
     return posicion;
 }
 int tirarDado() {
+    int dado;
     srand(time(0));
     dado = rand() % 6 + 1;
     return dado;
 }
 int tirardadoManual() {
+    int dado;
     cin >> dado;
     return dado;
 }
 int quienEmpieza() {
     srand(time(0));
-    jugador = rand() % 2 + 1;
+    jugador = rand() % NUM_JUGADORES + 1;
     cout << "\tCOMIENZA EL JUGADOR ";
     return jugador;
 }
