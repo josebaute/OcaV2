@@ -14,7 +14,7 @@ const int TURNO_POSADA = 1;
 const int TURNO_PRISION = 2;
 const int TURNO_POZO = 3;
 
-const int NUM_JUGADORES = 3;
+const int NUM_JUGADORES = 4;
 const int MAX_JUGADORES = 4;
 const int NUM_FILAS_A_DIBUJAR = 3;
 typedef enum { NORMAL, OCA, PUENTE1, PUENTE2, POZO, POSADA, LABERINTO, DADO1, DADO2, CARCEL, CALAVERA } tCasillas;
@@ -42,9 +42,6 @@ int partida(const tTablero tablero);
 void tirada(const tTablero tablero, int& casillaActual, int& penalizacion, bool MODO_DEBUG);
 
 bool MODO_DEBUG;
-
-
-
 
 
 
