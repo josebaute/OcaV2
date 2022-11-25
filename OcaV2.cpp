@@ -14,7 +14,7 @@ const int TURNO_POSADA = 1;
 const int TURNO_PRISION = 2;
 const int TURNO_POZO = 3;
 
-const int NUM_JUGADORES = 4;
+const int NUM_JUGADORES = 3;
 const int MAX_JUGADORES = 4;
 const int NUM_FILAS_A_DIBUJAR = 3;
 typedef enum { NORMAL, OCA, PUENTE1, PUENTE2, POZO, POSADA, LABERINTO, DADO1, DADO2, CARCEL, CALAVERA } tCasillas;
@@ -142,7 +142,7 @@ int quienEmpieza() {
 }
 bool esCasillaPremio(const tTablero tablero, int casilla) {
     bool premio = false;
-    if (tablero[casilla - 1] == OCA || tablero[casilla - 1] == PUENTE1 || tablero[casilla - 1] == DADO1) {
+    if (tablero[casilla - 1] == OCA || tablero[casilla - 1] == PUENTE1 || tablero[casilla - 1] == DADO1 || tablero[casilla - 1] == PUENTE2 || tablero[casilla - 1] == DADO2) {
         premio = true;
     }
     return premio;
@@ -158,7 +158,7 @@ int saltaACasilla(const tTablero tablero, int casillaActual) {
         }
         else {
             if (tablero[casillaActual - 1] == PUENTE1) {
-                tCasillas tipo = PUENTE1;
+                tCasillas tipo = PUENTE2;
                 cout << "HAS CAIDO EN UN PUENTE, PASAS A EL SIGUIENTE PUENTE" << endl;
                 buscaCasillaAvanzando(tablero, tipo, casillaActual);
                 cout << "CASILLA ACTUAL: " << casillaActual << endl;
@@ -463,7 +463,6 @@ int partida(const tTablero tablero) {
         }
         
         casillaActual = casillasJ[jugador - 1];
-
         cout << "CASILLA ACTUAL: " << casillaActual << endl;
         if (MODO_DEBUG == true) {
             cout << "VALOR DEL DADO: ";
@@ -496,7 +495,6 @@ int partida(const tTablero tablero) {
             cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
         }
     }
-
     cout << "\t **** GANA LA PARTIDA EL JUGADOR " << jugador << endl;
     return jugador;
 }
