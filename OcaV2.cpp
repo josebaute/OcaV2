@@ -38,7 +38,8 @@ void efectoTirada(const tTablero tablero, int& casillaJ, int& penalizacion);
 int saltaACasilla(const tTablero tablero, int casillaActual);
 void iniciaJugadores(tJugadores casillaJ, tJugadores penalizacion);
 bool esCasillaPremio(const tTablero tablero, int casilla);
-
+int partida(const tTablero tablero);
+void tirada(const tTablero tablero, int& casillaActual, int& penalizacion, bool MODO_DEBUG);
 
 bool MODO_DEBUG;
 
@@ -48,120 +49,10 @@ bool MODO_DEBUG;
 
 
 int main() {
-    srand(time(NULL));
-    char siguiente = '\n';
-    bool premio;
-    int casillaActual = 1;
-    int penalizacionJ = 0;
-    tJugadores casillasJ;
-    tJugadores penalizacion;
-    iniciaJugadores(casillasJ, penalizacion);
     tTablero tablero;
-    tCasillas casillas;
-    int dado;
-    int jugador;
     iniciaTablero(tablero);
     cargaTablero(tablero);
-    pintaTablero(tablero, casillasJ);
-    cout << "\t**** LA OCA ****" << endl;
-    cout << "SELECCIONE MODO DE JUEGO:" << endl;
-    cout << "MODO NORMAL(0) ------- MODO DEBUG(1)" << endl;
-    cin >> MODO_DEBUG;
-    //pintaTablero(tablero, casillasJ);
-    int i = 0;
-
-    jugador = quienEmpieza();
-
-    while (casillasJ[jugador - 2] < NUM_CASILLAS) { //si el ultimo jugador llega a el final, NO GANA, HAY QUE ARREGLARLO
-        //pintaTablero(tablero, casillasJ);
-        penalizacionJ = penalizacion[jugador - 1];
-        while (penalizacionJ > 0) {
-            cout << "El jugador " << jugador << " tiene " << penalizacion[jugador - 1] << " turnos sin jugar" << endl;
-            penalizacion[jugador - 1]--;
-            if (jugador < NUM_JUGADORES) {
-                jugador++;
-            }
-            else {
-                jugador = 1;
-            }
-
-            cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
-            penalizacionJ = penalizacion[jugador - 1];
-        }
-        /*if (penalizacionJ > 0) {
-            cout << "El jugador " << jugador << " tiene " << penalizacion[jugador - 1] << " turnos sin jugar" << endl;
-            penalizacion[jugador - 1]--;
-            if (jugador < NUM_JUGADORES) {
-                jugador++;
-            }
-            else {
-                jugador = 1;
-            }
-
-            cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
-
-        }*/
-        //penalizacionJ = penalizacion[jugador - 1];
-        casillaActual = casillasJ[jugador - 1];
-
-        cout << "CASILLA ACTUAL: " << casillaActual << endl;
-        if (MODO_DEBUG == true) {
-            cout << "VALOR DEL DADO: ";
-            dado = tirardadoManual();
-            cout << endl;
-        }
-        else {
-            cout << "VALOR DEL DADO: ";
-            dado = tirarDado();
-            cout << dado << endl;
-        }
-        casillaActual = casillaActual + dado;
-        cout << "PASAS A LA CASILLA: " << casillaActual << endl;
-        premio = esCasillaPremio(tablero, casillaActual);
-        efectoTirada(tablero, casillaActual, penalizacionJ);
-        if (premio) {
-            while (premio && casillaActual < NUM_CASILLAS) {
-                cout << "VUELVES A TIRAR" << endl;
-                cin.get(siguiente);
-                if (MODO_DEBUG == true) {
-                    cout << "VALOR DEL DADO: ";
-                    dado = tirardadoManual();
-                    cout << endl;
-                }
-                else {
-                    cout << "VALOR DEL DADO: ";
-                    dado = tirarDado();
-                    cout << dado << endl;
-                }
-                casillaActual = casillaActual + dado;
-                cout << "PASAS A LA CASILLA: " << casillaActual << endl;
-                premio = esCasillaPremio(tablero, casillaActual);
-                efectoTirada(tablero, casillaActual, penalizacionJ);
-            }
-        }
-        penalizacion[jugador - 1] = penalizacionJ;
-        casillasJ[jugador - 1] = casillaActual;
-
-
-        if (jugador == NUM_JUGADORES) {
-            jugador = 1;
-        }
-        else {
-            jugador++;
-        }
-        cout << "PULSE ENTER PARA CONTINUAR";
-        pintaTablero(tablero, casillasJ);
-        cin.get(siguiente);
-        cout << endl;
-        if (casillasJ[jugador - 2] < NUM_CASILLAS) {
-            cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
-        }
-        //cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
-    }
-
-
-
-    cout << "\t **** GANA LA PARTIDA EL JUGADOR " << jugador - 1 << "****" << endl;
+    partida(tablero);
     return 0;
 }
 
@@ -547,3 +438,151 @@ void pintaJugadores(const tJugadores casillasJ, int fila, int casillasPorFila) {
 
 }
 
+void tirada(const tTablero tablero, int& casillaActual, int& penalizacion, bool MODO_DEBUG) {
+    bool premio = esCasillaPremio(tablero, casillaActual);
+    char siguiente = '\n';
+    int dado;
+    if (premio) {
+        while (premio && casillaActual < NUM_CASILLAS) {
+            cout << "VUELVES A TIRAR" << endl;
+            cin.get(siguiente);
+            if (MODO_DEBUG == true) {
+                cout << "VALOR DEL DADO: ";
+                dado = tirardadoManual();
+                cout << endl;
+            }
+            else {
+                cout << "VALOR DEL DADO: ";
+                dado = tirarDado();
+                cout << dado << endl;
+            }
+            casillaActual = casillaActual + dado;
+            cout << "PASAS A LA CASILLA: " << casillaActual << endl;
+            premio = esCasillaPremio(tablero, casillaActual);
+            efectoTirada(tablero, casillaActual, penalizacion);
+        }
+    }
+}
+
+
+
+
+
+int partida(const tTablero tablero) {
+    srand(time(NULL));
+    char siguiente = '\n';
+    bool premio;
+    int casillaActual = 1;
+    int penalizacionJ = 0;
+    tJugadores casillasJ;
+    tJugadores penalizacion;
+    iniciaJugadores(casillasJ, penalizacion);
+    //tTablero tablero;
+    //tCasillas casillas;
+    int dado;
+    int jugador;
+    //iniciaTablero(tablero);
+    //cargaTablero(tablero);
+    pintaTablero(tablero, casillasJ);
+    cout << "\t**** LA OCA ****" << endl;
+    cout << "SELECCIONE MODO DE JUEGO:" << endl;
+    cout << "MODO NORMAL(0) ------- MODO DEBUG(1)" << endl;
+    cin >> MODO_DEBUG;
+
+    int i = 0;
+
+    jugador = quienEmpieza();
+
+    while (casillasJ[jugador - 2] < NUM_CASILLAS) { //si el ultimo jugador llega a el final, NO GANA, HAY QUE ARREGLARLO
+        //pintaTablero(tablero, casillasJ);
+        penalizacionJ = penalizacion[jugador - 1];
+        while (penalizacionJ > 0) {
+            cout << "El jugador " << jugador << " tiene " << penalizacion[jugador - 1] << " turnos sin jugar" << endl;
+            penalizacion[jugador - 1]--;
+            if (jugador < NUM_JUGADORES) {
+                jugador++;
+            }
+            else {
+                jugador = 1;
+            }
+
+            cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
+            penalizacionJ = penalizacion[jugador - 1];
+        }
+        //if (penalizacionJ > 0) {
+          //  cout << "El jugador " << jugador << " tiene " << penalizacion[jugador - 1] << " turnos sin jugar" << endl;
+            //penalizacion[jugador - 1]--;
+            //if (jugador < NUM_JUGADORES) {
+              //  jugador++;
+            //}
+            //else {
+              //  jugador = 1;
+            //}
+
+            //cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
+
+        //}
+        //penalizacionJ = penalizacion[jugador - 1];
+        casillaActual = casillasJ[jugador - 1];
+
+        cout << "CASILLA ACTUAL: " << casillaActual << endl;
+        if (MODO_DEBUG == true) {
+            cout << "VALOR DEL DADO: ";
+            dado = tirardadoManual();
+            cout << endl;
+        }
+        else {
+            cout << "VALOR DEL DADO: ";
+            dado = tirarDado();
+            cout << dado << endl;
+        }
+        casillaActual = casillaActual + dado;
+        cout << "PASAS A LA CASILLA: " << casillaActual << endl;
+        premio = esCasillaPremio(tablero, casillaActual);
+        efectoTirada(tablero, casillaActual, penalizacionJ);
+        tirada(tablero, casillaActual, penalizacionJ, MODO_DEBUG);
+        /*if (premio) {
+            while (premio && casillaActual < NUM_CASILLAS) {
+                cout << "VUELVES A TIRAR" << endl;
+                cin.get(siguiente);
+                if (MODO_DEBUG == true) {
+                    cout << "VALOR DEL DADO: ";
+                    dado = tirardadoManual();
+                    cout << endl;
+                }
+                else {
+                    cout << "VALOR DEL DADO: ";
+                    dado = tirarDado();
+                    cout << dado << endl;
+                }
+                casillaActual = casillaActual + dado;
+                cout << "PASAS A LA CASILLA: " << casillaActual << endl;
+                premio = esCasillaPremio(tablero, casillaActual);
+                efectoTirada(tablero, casillaActual, penalizacionJ);
+            }
+        }*/
+        penalizacion[jugador - 1] = penalizacionJ;
+        casillasJ[jugador - 1] = casillaActual;
+
+
+        if (jugador == NUM_JUGADORES && casillasJ[jugador - 1] < NUM_CASILLAS) {
+            jugador = 1;
+        }
+        else {
+            jugador++;
+        }
+        cout << "PULSE ENTER PARA CONTINUAR";
+        pintaTablero(tablero, casillasJ);
+        cin.get(siguiente);
+        cout << endl;
+        if (casillasJ[jugador - 2] < NUM_CASILLAS) {
+            cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
+        }
+        //cout << "\t++TURNO DEL JUGADOR " << jugador << "++" << endl;
+    }
+
+
+
+    cout << "\t **** GANA LA PARTIDA EL JUGADOR " << jugador - 1 << endl;
+    return jugador - 1;
+}
