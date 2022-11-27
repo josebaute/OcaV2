@@ -436,8 +436,12 @@ int partida(const tTablero tablero) {
     iniciaJugadores(casillasJ, penalizacion);
     int dado;
     int jugador;
+    cout << "|           --------         --------     -------   -------- " << endl;
+    cout << "|          |        |       |        |   |         |        |" << endl;
+    cout << "|          |--------|       |        |   |         |--------|" << endl;
+    cout << "|          |        |       |        |   |         |        |" << endl;
+    cout << "|________  |        |        --------     -------  |        |" << endl;
     pintaTablero(tablero, casillasJ);
-    cout << "\t**** LA OCA ****" << endl;
     cout << "SELECCIONE MODO DE JUEGO:" << endl;
     cout << "MODO NORMAL(0) ------- MODO DEBUG(1)" << endl;
     cin >> MODO_DEBUG;
